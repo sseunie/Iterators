@@ -105,7 +105,7 @@ public class Main {
             case "bt":
                 //STARTS CALCULATING TIME
                 timeStart = currentTimeMillis();
-                runWihBacktracking();
+                runWithBacktracking();
                 timeFinish = (currentTimeMillis() - timeStart)/1000;
                 //ENDS CALCULATING TIME
                 time+=timeFinish;
@@ -117,7 +117,7 @@ public class Main {
     }
 
     private static void runWithBruteForce() {
-        BruteForceIterator iterator = new BruteForceIterator(5);
+        BruteForceIterator iterator = new BruteForceIterator(n);
         int count = 0;
         String combination;
         while (iterator.hasNext()) {
@@ -130,14 +130,15 @@ public class Main {
         if (options[6]) System.out.println(count);
     }
 
-    private static void runWihBacktracking() {
+    private static void runWithBacktracking() {
         BacktrackingIterator iterator = new BacktrackingIterator(n);
-        int counter = 0;
+        int count = 0;
         while (iterator.hasNext()) {
             if (options[6]) System.out.println(Arrays.toString(iterator.next()));
-            counter++;
+            else iterator.next();
+            count++;
         }
-        if (options[6]) System.out.println(counter);
+        if (options[6]) System.out.println(count);
     }
 
     private static void printInput(boolean print) {
