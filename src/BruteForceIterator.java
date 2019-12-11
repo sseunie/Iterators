@@ -44,7 +44,7 @@ public class BruteForceIterator {
 
     /*
     public static void main(String[] args) {
-        BruteForceIterator iterator = new BruteForceIterator(5);
+        BruteForceIterator iterator = new BruteForceIterator(4);
         int count = 0;
         String combination;
         while (iterator.hasNext()) {
