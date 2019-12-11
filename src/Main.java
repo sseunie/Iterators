@@ -89,16 +89,16 @@ public class Main {
     private static void runner() {
         printInput(options[5]);
         if (options[1]) {
-            printTime(options[4], calculateTime("bf"));
+            printTime(options[4], calculateTime("bf"), "Brute Force");
         }
         if (options[2]) {
-            printTime(options[4], calculateTime("bt"));
+            printTime(options[4], calculateTime("bt"), "Backtracking");
         }
         if (options[7]) {
-            printTime(options[4], calculateTime("t"));
+            printTime(options[4], calculateTime("t"), "Tabulation");
         }
         if (options[8]) {
-            printTime(options[4], calculateTime("m"));
+            printTime(options[4], calculateTime("m"), "Memoization");
         }
     }
 
@@ -192,7 +192,7 @@ public class Main {
         if (print) System.out.println("Number of elements (n) = " + n + "\n");
     }
 
-    private static void printTime(boolean print, double time) {
-        if (print) System.out.println("Time: " + time);
+    private static void printTime(boolean print, double time, String method) {
+        if (print) System.out.println("Time of the execution using " + method + ": " + time + "\n");
     }
 }

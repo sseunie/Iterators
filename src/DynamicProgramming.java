@@ -38,7 +38,7 @@ public class DynamicProgramming {
     }
 
     public static void main(String[] args) {
-        int n = 5;
+        int n = 6;
 
         System.out.println("Number of " + n + "-digit binary strings " +
                 "without any consecutive 1’s are " + memoization(n, 0));
