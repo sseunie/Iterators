@@ -8,15 +8,17 @@ import static java.lang.System.currentTimeMillis;
 public class Main {
     private static int n;
 
-    private static boolean[] options = new boolean[8];
+    private static boolean[] options = new boolean[9];
 
     private static File file;
 
     private static String help = "This program finds all N-Digit binary strings without consecutive 1’s.\n\n" +
             "Input options:\n" +
             "-file filename : input data from file\n" +
-            "-bf : uses brute force\n" +
-            "-bt : uses backtracking\n" +
+            "-bf : uses brute force. Unless -r specified uses iteration\n" +
+            "-bt : uses backtracking. Unless -r specified uses iteration\n" +
+            "-t : dynamic programming using tabulation\n" +
+            "-m : dynamic programming using memoization\n" +
             "-r : uses the recursive version\n" +
             "Display options:\n" +
             "-h : shows this help message and exit\n" +
@@ -30,7 +32,6 @@ public class Main {
         if (arguments.contains("-h")) System.out.println(help);
         else {
             if (!arguments.contains("-file")) System.out.println("\nFalta archivo de datos.\n" + help);
-            //else if (arguments.contains("-bf") && arguments.contains("-bt")) System.out.println("\nSólo usar una estrategia (Fuerza bruta -bf o Backtracking -bt).\n" + help); ???????????????
             else {
                 for (int i = 0; i < args.length; i++) {
                     switch (args[i]) {
@@ -57,6 +58,12 @@ public class Main {
                             break;
                         case "-do":
                             options[6] = true;
+                            break;
+                        case "-t":
+                            options[7] = true;
+                            break;
+                        case "-m":
+                            options[8] = true;
                             break;
                         default:
                             break;
@@ -87,6 +94,12 @@ public class Main {
         if (options[2]) {
             printTime(options[4], calculateTime("bt"));
         }
+        if (options[7]) {
+            printTime(options[4], calculateTime("t"));
+        }
+        if (options[8]) {
+            printTime(options[4], calculateTime("m"));
+        }
     }
 
     private static double calculateTime(String method) {
@@ -110,6 +123,22 @@ public class Main {
                 //ENDS CALCULATING TIME
                 time+=timeFinish;
                 break;
+            case "t":
+                //STARTS CALCULATING TIME
+                timeStart = currentTimeMillis();
+                runWithTabulation();
+                timeFinish = (currentTimeMillis() - timeStart)/1000;
+                //ENDS CALCULATING TIME
+                time+=timeFinish;
+                break;
+            case "m":
+                //STARTS CALCULATING TIME
+                timeStart = currentTimeMillis();
+                runWithMemoization();
+                timeFinish = (currentTimeMillis() - timeStart)/1000;
+                //ENDS CALCULATING TIME
+                time+=timeFinish;
+                break;
             default:
                 break;
         }
@@ -117,28 +146,46 @@ public class Main {
     }
 
     private static void runWithBruteForce() {
-        BruteForceIterator iterator = new BruteForceIterator(n);
         int count = 0;
-        String combination;
-        while (iterator.hasNext()) {
-            combination = Arrays.toString(iterator.next());
-            if (!combination.contains("1, 1")) {
-                count++;
-                if (options[6]) System.out.println(combination);
+        if (options[3]) count = Recursive.bruteForce(n, "");
+        else {
+            BruteForceIterator iterator = new BruteForceIterator(n);
+            while (iterator.hasNext()) {
+                String combination = Arrays.toString(iterator.next());
+                if (!combination.contains("1, 1")) {
+                    count++;
+                }
             }
         }
-        if (options[6]) System.out.println(count);
+        if (options[6]) printOutput(count);
     }
 
     private static void runWithBacktracking() {
-        BacktrackingIterator iterator = new BacktrackingIterator(n);
         int count = 0;
-        while (iterator.hasNext()) {
-            if (options[6]) System.out.println(Arrays.toString(iterator.next()));
-            else iterator.next();
-            count++;
+        if (options[3]) count = Recursive.backtracking(n, 0);
+        else {
+            BacktrackingIterator iterator = new BacktrackingIterator(n);
+            while (iterator.hasNext()) {
+                count++;
+                iterator.next();
+            }
         }
-        if (options[6]) System.out.println(count);
+        if (options[6]) printOutput(count);
+    }
+
+    private static void runWithTabulation() {
+        int count = DynamicProgramming.tabulation(n, 0);
+        if(options[6]) printOutput(count);
+    }
+
+    private static void runWithMemoization() {
+        int count = DynamicProgramming.memoization(n, 0);
+        if(options[6]) printOutput(count);
+    }
+
+    private static void printOutput(int count) {
+        System.out.println("Number of " + n + "-digit binary strings " +
+                "without any consecutive 1’s are " + count);
     }
 
     private static void printInput(boolean print) {

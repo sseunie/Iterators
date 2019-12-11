@@ -44,15 +44,4 @@ public class BacktrackingIterator {
         }
         return false;
     }
-
-    /*
-    public static void main(String[] args) {
-        BacktrackingIterator iterator = new BacktrackingIterator(6);
-        int counter = 0;
-        while (iterator.hasNext()) {
-            System.out.println(Arrays.toString(iterator.next()));
-            counter++;
-        }
-        System.out.println(counter);
-    }*/
 }
