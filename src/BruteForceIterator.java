@@ -17,7 +17,7 @@ public class BruteForceIterator {
         int position = -1;
         currentCombination = Arrays.copyOf(nextCombination, n);
 
-        for (int i = n-1; i >= 0; i--) {
+        for (int i = n - 1; i >= 0; i--) {
             if (nextCombination[i] == 0) {
                 nextCombination[i] = 1;
                 position = i;
@@ -26,19 +26,31 @@ public class BruteForceIterator {
         }
         if (position == -1) {
             nextCombination = null;
-        }
-        else if (position != n-1) {
-            for (int i = position+1; i < n; i++) {
+        } else if (position != n - 1) {
+            for (int i = position + 1; i < n; i++) {
                 nextCombination[i] = 0;
             }
         }
         return currentCombination;
     }
 
+
     public boolean hasNext() {
         if (nextCombination != null) {
             return true;
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        BruteForceIterator iterator = new BruteForceIterator(4);
+        int count = 0;
+        String combination;
+        while (iterator.hasNext()) {
+            combination = Arrays.toString(iterator.next());
+            if (!combination.contains("1, 1")) {
+                count++;
+            }
+        }
     }
 }

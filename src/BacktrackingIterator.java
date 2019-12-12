@@ -1,9 +1,9 @@
 import java.util.Arrays;
 
 public class BacktrackingIterator {
-    int[] currentCombination;
-    int[] nextCombination;
-    int n;
+    private int[] currentCombination;
+    private int[] nextCombination;
+    private int n;
 
     public BacktrackingIterator(int n) {
         this.n = n;
@@ -45,3 +45,8 @@ public class BacktrackingIterator {
         return false;
     }
 }
+
+
+
+
+

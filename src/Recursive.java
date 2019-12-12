@@ -16,8 +16,7 @@ public class Recursive {
         return bruteForce(n -1, out+"0") + bruteForce(n-1,out+"1");
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         int n = 5;
 
         System.out.println("Number of " + n + "-digit binary strings " +
