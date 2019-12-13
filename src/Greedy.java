@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class Greedy {
-    public static String[] subArrayMinimumWeight(int[] array, int n) {
+    public static String subArrayMinimumWeight(int[] array, int n) {
         String res = "";
         Arrays.sort(array);
         int i = array.length -1;
@@ -10,9 +10,8 @@ public class Greedy {
             n -= array[i];
             i--;
         }
-        String[] result = res.split(",");
-        if (n > 0) return new String[0];
-        else return result;
+        if (n > 0) return "";
+        else return res.substring(0,res.length()-1);
     }
 
     public static int maximumNumberOfConsecutive1s(int[] array) {
@@ -83,25 +82,6 @@ public class Greedy {
         return max;
     }
 
-    public static int greedyMinCost(int[][] cost){
-        int m = cost.length-1;
-        int n = cost[0].length-1;
-
-        int accumulatedCost = cost[0][0];
-        int i = 0;
-        int j = 0;
-        while (i < m && j < n) {
-            if (cost[i+1][j] > cost[i][j+1]) {
-                accumulatedCost += cost[i][j+1];
-                j++;
-            } else {
-                accumulatedCost += cost[i+1][j];
-                i++;
-            }
-        }
-        return accumulatedCost+cost[m][n];
-    }
-
     public static void bubbleSort(int[] x, int[] positions) {
         boolean swapped = true;
         while (swapped) {
@@ -120,36 +100,5 @@ public class Greedy {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println("--------------------SUBARRAY MINIMUM WEIGHT--------------------");
-
-        String[] array =  subArrayMinimumWeight(new int[]{1,2,3,4,5,6,7,8,9},20);
-        for (int i = 0; i < array.length; i++) {
-            System.out.print(array[i]+" ");
-        }
-        System.out.println();
-
-        System.out.println("--------------------MAXIMUM NUMBER OF CONSECUTIVE 1's--------------------");
-        System.out.println("Should be 7 and returns: " + maximumNumberOfConsecutive1s(new int[]{1,1,0,1,1,0,1,1,1,1,0,0}));
-        System.out.println("Should be 4 and returns: " + maximumNumberOfConsecutive1s(new int[]{1,1,0,1,0,0,1,1,0,1,0,0}));
-        System.out.println("Should be 3 and returns: " + maximumNumberOfConsecutive1s(new int[]{1,1,0,0,1,1}));
-        System.out.println("Should be 3 and returns: " + maximumNumberOfConsecutive1s(new int[]{0,1,0,0,1,1}));
-        System.out.println("Should be 5 and returns: " + maximumNumberOfConsecutive1s(new int[]{1,1,1,0,1,0}));
-        System.out.println("Should be 6 and returns: " + maximumNumberOfConsecutive1s(new int[]{1,1,0,0,1,1,1,1,1,0}));
-        System.out.println("Should be 1 and returns: " + maximumNumberOfConsecutive1s(new int[]{0,0,0,0,0,0}));
-        System.out.println("Should be 6 and returns: " + maximumNumberOfConsecutive1s(new int[]{1,1,1,1,1,1}));
-
-
-        System.out.println("--------------------FIND MINIMUM COST--------------------");
-        int[][] cost = {
-                { 4, 7, 8, 6, 4 },
-                { 6, 7, 3, 9, 2 },
-                { 3, 8, 1, 2, 4 },
-                { 7, 1, 7, 3, 7 },
-                { 2, 9, 8, 9, 3 }};
-        System.out.println("Greedy: the minimum cost is " + greedyMinCost(cost));
-
     }
 }

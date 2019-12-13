@@ -5,22 +5,23 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.setOut;
 
-public class Main {
+public class MainExtra {
     private static int n;
-
-    private static boolean[] options = new boolean[9];
-
+    private static boolean[] options = new boolean[8];
+    private static int subArrayN;
+    private static int[] array;
+    private static int[][] matrix;
     private static File file;
 
     private static String help = "This program finds all N-Digit binary strings without consecutive 1’s.\n\n" +
             "Input options:\n" +
             "-file filename : input data from file\n" +
-            "-bf : uses brute force. Unless -r specified uses iteration\n" +
-            "-bt : uses backtracking. Unless -r specified uses iteration\n" +
-            "-t : dynamic programming using tabulation\n" +
             "-m : dynamic programming using memoization\n" +
-            "-r : uses the recursive version\n" +
+            "-t : dynamic programming using tabulation\n" +
+            "-g1 : greedy problem 1\n" +
+            "-g2 : greedy problem 2\n" +
             "Display options:\n" +
             "-h : shows this help message and exit\n" +
             "-dt : display time in seconds\n" +
@@ -29,7 +30,6 @@ public class Main {
 
     public static void main(String[] args) {
         String arguments = Arrays.toString(args);
-
         if (arguments.contains("-h")) System.out.println(help);
         else {
             if (!arguments.contains("-file")) System.out.println("\nFalta archivo de datos.\n" + help);
@@ -42,14 +42,11 @@ public class Main {
                                 options[0] = true;
                             } catch (Exception e) {}
                             break;
-                        case "-bf":
+                        case "-g1":
                             options[1] = true;
                             break;
-                        case "-bt":
+                        case "-g2":
                             options[2] = true;
-                            break;
-                        case "-r":
-                            options[3] = true;
                             break;
                         case "-dt":
                             options[4] = true;
@@ -64,7 +61,7 @@ public class Main {
                             options[7] = true;
                             break;
                         case "-m":
-                            options[8] = true;
+                            options[3] = true;
                             break;
                         default:
                             break;
@@ -79,27 +76,56 @@ public class Main {
         if (options[0]) {
             try {
                 Scanner scanner = new Scanner(file);
-                if (scanner.hasNextLine()) {
-                    n = Integer.parseInt(scanner.nextLine());
+                if (options[1]) {
+                    if (scanner.hasNextLine()) {
+                        subArrayN = Integer.parseInt(scanner.nextLine());
+                        String arrayString = scanner.nextLine();
+                        array = stringArrayToInt(arrayString.split(" "));
+                    }
                 }
+                if (options[2]) {
+                    if (scanner.hasNextLine()) {
+                        String arrayString = scanner.nextLine();
+                        array = stringArrayToInt(arrayString.split(" "));
+                    }
+                }
+                if(options[3] || options[7]) {
+                    if (scanner.hasNextLine()) {
+                        n = Integer.parseInt(scanner.nextLine());
+                        matrix = new int[n][];
+                        for (int i = 0; i < n; i++) {
+                            String arrayString = scanner.nextLine();
+                            matrix[i] = stringArrayToInt(arrayString.split(" "));
+                        }
+                    }
+                }
+
             } catch (FileNotFoundException e) {}
             runner();
         }
     }
 
+    private static int[] stringArrayToInt(String[] stringArray) {
+        int[] array = new int[stringArray.length];
+        for (int i=0; i < stringArray.length; i++) {
+            array[i] = Integer.parseInt(stringArray[i]);
+        }
+        return array;
+    }
+
     private static void runner() {
         printInput(options[5]);
         if (options[1]) {
-            printTime(options[4], calculateTime("bf"), "Brute Force");
+            printTime(options[4], calculateTime("g1"), "Greedy (minimum sub array)");
         }
         if (options[2]) {
-            printTime(options[4], calculateTime("bt"), "Backtracking");
+            printTime(options[4], calculateTime("g2"), "Greedy (maximum number of consecutive 1's)");
+        }
+        if (options[3]) {
+            printTime(options[4], calculateTime("m"), "Memoization (find minimum cost)");
         }
         if (options[7]) {
-            printTime(options[4], calculateTime("t"), "Tabulation");
-        }
-        if (options[8]) {
-            printTime(options[4], calculateTime("m"), "Memoization");
+            printTime(options[4], calculateTime("t"), "Tabulation (find minimum cost)");
         }
     }
 
@@ -108,18 +134,18 @@ public class Main {
         double timeStart;
         double timeFinish;
         switch (method) {
-            case "bf":
+            case "g1":
                 //STARTS CALCULATING TIME
                 timeStart = currentTimeMillis();
-                runWithBruteForce();
+                runWithGreedyProblem1();
                 timeFinish = (currentTimeMillis() - timeStart)/1000;
                 //ENDS CALCULATING TIME
                 time += timeFinish;
                 break;
-            case "bt":
+            case "g2":
                 //STARTS CALCULATING TIME
                 timeStart = currentTimeMillis();
-                runWithBacktracking();
+                runWithGreedyProblem2();
                 timeFinish = (currentTimeMillis() - timeStart)/1000;
                 //ENDS CALCULATING TIME
                 time+=timeFinish;
@@ -146,51 +172,63 @@ public class Main {
         return time;
     }
 
-    private static void runWithBruteForce() {
-        int count = 0;
-        if (options[3]) count = Recursive.bruteForce(n, "");
-        else {
-            BruteForceIterator iterator = new BruteForceIterator(n);
-            while (iterator.hasNext()) {
-                String combination = Arrays.toString(iterator.next());
-                if (!combination.contains("1, 1")) {
-                    count++;
-                }
-            }
-        }
+    private static void runWithGreedyProblem1() {
+        String print;
+        print = Greedy.subArrayMinimumWeight(array, subArrayN);
+        if (options[6]) printOutput(print);
+    }
+
+    private static void runWithGreedyProblem2() {
+        int count;
+        count = Greedy.maximumNumberOfConsecutive1s(array);
         if (options[6]) printOutput(count);
     }
 
-    private static void runWithBacktracking() {
-        int count = 0;
-        if (options[3]) count = Recursive.backtracking(n, 0);
-        else {
-            BacktrackingIterator iterator = new BacktrackingIterator(n);
-            while (iterator.hasNext()) {
-                count++;
-                iterator.next();
-            }
-        }
-        if (options[6]) printOutput(count);
-    }
     private static void runWithTabulation() {
-        int count = DynamicProgramming.tabulation(n, 0);
+        int count = DynamicProgramming.findMinCostTab(matrix);
         if(options[6]) printOutput(count);
     }
 
     private static void runWithMemoization() {
-        HashMap<Integer,Integer> map = new HashMap<>();
-        int count = DynamicProgramming.memoization(n, 0, map);
+        HashMap<String,Integer> map = new HashMap<>();
+        int count = DynamicProgramming.findMinCostMem(matrix, matrix.length,matrix[0].length, map);
         if(options[6]) printOutput(count);
     }
 
     private static void printOutput(int count) {
-        System.out.println("Number of " + n + "-digit binary strings " +
-                "without any consecutive 1’s are " + count);
+        if (options[3]) System.out.println("The path with minimum cost is: " + count);
+        if (options[2]) System.out.println("Number of maximum consecutive 1s by replacing one 0 is: " + count);
+    }
+
+    private static void printOutput(String print) {
+        if(options[1]) System.out.print("The smallest array that sums more or equal than " + subArrayN + " is: " + print + "\n");
     }
 
     private static void printInput(boolean print) {
-        if (print) System.out.println("Number of elements (n) = " + n + "\n");
+        if (print) {
+            if (options[1]) {
+                System.out.println("\nn = " + subArrayN + "\n" +
+                        "Initial array = ");
+                for (int i = 0; i < array.length; i++) {
+                    System.out.print(array[i] + " ");
+                }
+                System.out.println();
+            }
+            if (options[2]) {
+                for (int i = 0; i < array.length; i++) {
+                    System.out.print(array[i] + " ");
+                }
+                System.out.println();
+            }
+            if (options[3] || options[7]) {
+                for(int i = 0; i < matrix.length; i++){
+                    for (int j = 0; j < matrix[0].length; j++) {
+                        System.out.print(matrix[i][j]);
+                    }
+                    System.out.println();
+                }
+            }
+        }
     }
 
     private static void printTime(boolean print, double time, String method) {
