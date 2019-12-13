@@ -41,16 +41,4 @@ public class BruteForceIterator {
         }
         return false;
     }
-
-    public static void main(String[] args) {
-        BruteForceIterator iterator = new BruteForceIterator(4);
-        int count = 0;
-        String combination;
-        while (iterator.hasNext()) {
-            combination = Arrays.toString(iterator.next());
-            if (!combination.contains("1, 1")) {
-                count++;
-            }
-        }
-    }
 }

@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static java.lang.System.currentTimeMillis;
@@ -179,7 +180,8 @@ public class Main {
     }
 
     private static void runWithMemoization() {
-        int count = DynamicProgramming.memoization(n, 0);
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int count = DynamicProgramming.memoization(n, 0, map);
         if(options[6]) printOutput(count);
     }
 

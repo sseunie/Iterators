@@ -15,13 +15,4 @@ public class Recursive {
         if (n == 0) return (out.contains("11")) ? 0: 1;
         return bruteForce(n -1, out+"0") + bruteForce(n-1,out+"1");
     }
-
-    public static void main(String[] args) {
-        int n = 5;
-
-        System.out.println("Number of " + n + "-digit binary strings " +
-                "without any consecutive 1’s are " + backtracking(n, 0));
-        System.out.println("Number of " + n + "-digit binary strings " +
-                "without any consecutive 1’s are " + bruteForce(n, ""));
-    }
 }
